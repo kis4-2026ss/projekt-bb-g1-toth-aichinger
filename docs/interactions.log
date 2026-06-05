@@ -5,3 +5,4 @@
 [2026-06-05] Write a full project proposal in proposal.md covering: goal, AI assistance, architecture diagram, project plan with deadlines, and team responsibilities. Source app: https://github.com/DeimanteValunaite/weather-app-swift. Team: Dorian Toth & Marvin Aichinger. Proposal deadline: 10.06.2026.
 [2026-06-05] Create a CLAUDE.md file with comprehensive instructions for Claude: project overview, mandatory behaviors (log all requests, no auto-commits), Android/Kotlin development guidelines, Swift-to-Kotlin translation reference table, and AI workflow instructions.
 [2026-06-05] Reorganize folder structure: move proposal.md and interactions.log into a new docs/ folder, update path references in CLAUDE.md accordingly.
+[2026-06-05] Initialize an empty Android project inside the android/ directory, openable with Android Studio, using Kotlin, Jetpack Compose, and a single empty MainActivity.

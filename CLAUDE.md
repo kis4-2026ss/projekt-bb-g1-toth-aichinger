@@ -77,7 +77,6 @@ When translating Swift code to Kotlin, apply these equivalences automatically:
 
 ## AI Workflow Instructions
 
-- **Code translation:** Always show the original Swift snippet and the Kotlin equivalent side by side.
 - **Pattern divergence:** When the Android pattern differs significantly from the iOS approach, briefly explain why (platform constraint, different lifecycle model, etc.).
 - **No clean equivalent:** If a Swift feature has no direct Android equivalent, flag it explicitly and propose the best alternative.
 - **API calls:** When generating network code, use Retrofit interfaces with `suspend fun` — not callback-based approaches.
