@@ -1,0 +1,5 @@
+# Interactions Log
+
+[2026-06-05] Create three files: an empty README.md, an empty proposal.md, and an interactions log where all requests are logged in English.
+[2026-06-05] Ask for a project title: the project involves taking an existing Swift (iOS) app and porting/adapting it to run on Android.
+[2026-06-05] Write a full project proposal in proposal.md covering: goal, AI assistance, architecture diagram, project plan with deadlines, and team responsibilities. Source app: https://github.com/DeimanteValunaite/weather-app-swift. Team: Dorian Toth & Marvin Aichinger. Proposal deadline: 10.06.2026.
