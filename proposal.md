@@ -68,12 +68,11 @@ We will use Claude / Copilot / ChatGPT to:
 | # | Task | Deadline | Owner |
 |---|---|---|---|
 | 1 | Analyze Swift source code; document structure and features | 15.06.2026 | Both |
-| 2 | Set up Android project (Kotlin, Gradle, dependencies) | 15.06.2026 | Marvin |
+| 2 | Set up Android project | 15.06.2026 | Marvin |
 | 3 | AI-assisted translation of data/network layer (API calls) | 20.06.2026 | Dorian |
-| 4 | AI-assisted migration of UI (SwiftUI → Jetpack Compose) | 25.06.2026 | Marvin |
-| 5 | Location service integration (CoreLocation → Android API) | 25.06.2026 | Dorian |
+| 4 | AI-assisted migration of UI (SwiftUI) | 25.06.2026 | Marvin |
+| 5 | Location service integration | 25.06.2026 | Dorian |
 | 6 | Integration testing on emulator and physical device | 30.06.2026 | Both |
-| 7 | Bug fixing and UI polish | 05.07.2026 | Both |
-| 8 | Final documentation and README | 08.07.2026 | Both |
+| 7 | Final documentation and README | 08.07.2026 | Both |
 
 ---
