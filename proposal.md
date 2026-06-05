@@ -19,26 +19,20 @@ The goal of this project is to port an existing iOS weather application — orig
 The following components will be developed or adapted:
 
 - **Android app (Kotlin):** A functionally equivalent rewrite of the Swift weather app targeting Android
-- **UI layer:** Recreated using Jetpack Compose or XML-based layouts to match the original interface
-- **Data layer:** Weather API integration (same or equivalent API endpoint as the Swift version)
-- **Location services:** Replaced from CoreLocation (iOS) to Android Location API
+- **UI layer:** Recreating layouts to match the original interface
+- **Data layer:** Weather API integration
+- **Location services:** Using an available Location API
 
 ### AI Assistance in the Development Process
 
-AI tools are used at multiple stages of the project:
+We will use Claude / Copilot / ChatGPT to:
+- understand and explain existing Codebase
+- migrate to the new Platform
+- translate the Code
+- migrate the UI
+- integration of APIs
 
-| Stage | AI Tool | Purpose |
-|---|---|---|
-| Code understanding | Claude / ChatGPT | Analyze and explain the existing Swift codebase |
-| Code translation | Claude / GitHub Copilot | Translate Swift logic to equivalent Kotlin code |
-| UI migration | Claude / Copilot | Suggest Jetpack Compose equivalents for SwiftUI components |
-| API integration | Claude | Generate and adapt network/API calls for Android |
-| Testing | Claude / Copilot | Generate unit and UI test cases |
-| Documentation | Claude | Write inline documentation and README |
-
-AI acts as a **pair programmer and translator** — it does not replace developer judgment but accelerates understanding of an unfamiliar codebase and platform.
-
-### Architecture / Development Diagram
+### Development Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -53,7 +47,7 @@ AI acts as a **pair programmer and translator** — it does not replace develope
           │  Claude / GitHub Copilot │
           │  - Code analysis         │
           │  - Swift → Kotlin        │
-          │  - SwiftUI → Compose     │
+          │  - UI migration          │
           │  - API adaptation        │
           └──────────────┬───────────┘
                          │
@@ -64,13 +58,7 @@ AI acts as a **pair programmer and translator** — it does not replace develope
           │  - Validate AI output    │
           │  - Integrate & test      │
           │  - Fix platform issues   │
-          └──────────────┬───────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                  TARGET (Android / Kotlin)               │
-│  Jetpack Compose UI │ Android Location API │ Retrofit    │
-└─────────────────────────────────────────────────────────┘
+          └──────────────────────────┘
 ```
 
 ---
@@ -89,13 +77,3 @@ AI acts as a **pair programmer and translator** — it does not replace develope
 | 8 | Final documentation and README | 08.07.2026 | Both |
 
 ---
-
-## Teamwork and Responsibilities
-
-| Team Member | Responsibilities |
-|---|---|
-| **Dorian Toth** | Swift source analysis, data/network layer migration, location services, AI prompt engineering |
-| **Marvin Aichinger** | Android project setup, UI migration (Jetpack Compose), testing, integration |
-| **Both** | Code review, bug fixing, documentation, final presentation |
-
-AI tools are used jointly by both team members throughout the project, with each member responsible for reviewing and validating AI-generated output in their respective areas.
