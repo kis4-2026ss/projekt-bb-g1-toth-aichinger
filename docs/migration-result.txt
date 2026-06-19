@@ -1,0 +1,41 @@
+The full Android port is complete. Here's a summary of everything created/modified:
+
+
+  ┌──────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │                 File                 │                                                    Purpose                                                    │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ data/model/WeatherResponse.kt        │ All data classes (WeatherResponse, ListItem, MainData, WeatherItem, CloudsData, WindData, RainData, SysData,  │
+  │                                      │ CityData, Coordinates) with @SerializedName for snake_case JSON keys                                          │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ data/remote/WeatherApi.kt            │ Retrofit suspend fun interface → GET /data/2.5/forecast/hourly                                                │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ data/repository/WeatherRepository.kt │ Wraps API; getWeatherByCity() geocodes via Geocoder then calls API; getWeatherByLocation() calls directly;    │
+  │                                      │ returns Result<WeatherResponse>                                                                               │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ location/LocationManager.kt          │ FusedLocationProviderClient wrapper exposing StateFlow<Location?>                                             │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/WeatherViewModel.kt               │ AndroidViewModel with WeatherUiState sealed class, isCelsius: StateFlow<Boolean> backed by DataStore,         │
+  │                                      │ loadWeather(), loadWeatherForLocation(), toggleUnit(), formatting helpers, getDailyForecasts()                │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/WeatherIcons.kt           │ weatherIconVector(condition) mapping condition strings to Material Icons                                      │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/WeatherScreen.kt          │ Root composable — routes between Empty/Loading/Error/Success states, hosts search dialog and settings sheet   │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/TopWeatherSection.kt      │ Current temp, city name, H/L, weather icon                                                                    │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/HourlyForecastRow.kt      │ Single hourly card (time, icon, temp, humidity)                                                               │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/DailyForecastList.kt      │ Daily forecast row (day, condition, max/min temps)                                                            │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/IndicatorsGrid.kt         │ Feels Like / Humidity / Wind cards                                                                            │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/SunriseSunsetCard.kt      │ Sunrise & sunset display                                                                                      │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/LoadingScreen.kt          │ CircularProgressIndicator centered                                                                            │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/WelcomeScreen.kt          │ Location permission prompt + city search button                                                               │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/AddLocationDialog.kt      │ Search dialog with text field                                                                                 │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ui/screens/ManageLocationsSheet.kt   │ Settings bottom sheet with °C / °F toggle                                                                     │
+  └──────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────────┘

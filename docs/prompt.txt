@@ -1,0 +1,134 @@
+You are helping port a Swift/iOS weather app to Android (Kotlin + Jetpack Compose).
+
+## Source App
+
+The original app lives in the `ios/` directory of this repo. It is a weather app called "WeatheryApp" that:
+- Fetches hourly forecast data from OpenWeatherMap (`/data/2.5/forecast/hourly`)
+- Supports searching locations by name (geocoding via CLGeocoder)
+- Displays current conditions, hourly forecast, and daily forecast
+- Shows indicators: humidity, wind speed, cloud cover, precipitation probability, feels-like
+- Shows sunrise/sunset times
+- Supports Celsius/Fahrenheit toggle (stored in AppStorage/UserDefaults)
+- Supports saving favorite locations
+- Has a sidebar navigation (LeftSideBarView, RightSideBarView)
+- Uses a blue/dark-blue color scheme
+
+Key source files:
+- `ios/WeatheryApp/Helpers/APIService.swift` — URLSession-based HTTP client
+- `ios/WeatheryApp/Managers/WeatheryManager.swift` — API call + full JSON model (ResponseData and all nested structs)
+- `ios/WeatheryApp/Managers/LocationManager.swift` — CoreLocation wrapper
+- `ios/WeatheryApp/ViewModels/WeatherViewModel.swift` — ObservableObject with all derived properties and getWeatherForecast()
+- `ios/WeatheryApp/ViewModels/WeatherDataModel.swift` — additional data model
+- `ios/WeatheryApp/Views/` — all SwiftUI views
+
+## Target Stack
+
+- Language: Kotlin
+- UI: Jetpack Compose (no XML layouts)
+- Min SDK: API 26 (Android 8.0)
+- Network: Retrofit 2 + OkHttp + Gson
+- Location: FusedLocationProviderClient (Google Play Services)
+- Geocoding: Geocoder (android.location.Geocoder)
+- Async: Kotlin Coroutines + StateFlow
+- Architecture: MVVM — ViewModel + Repository
+- Preferences: DataStore (replaces AppStorage/UserDefaults)
+- Testing: JUnit4
+
+Output goes into `android/` (Android Studio project already scaffolded there).
+
+## Migration Tasks (do these in order)
+
+### 1. Data layer — models
+Translate all nested structs in `WeatheryManager.swift` into Kotlin data classes.
+- Use `@SerializedName` (Gson) for snake_case JSON keys (e.g., `feels_like`, `dt_txt`, `1h`)
+- The root class is `ResponseData`; keep the same nesting: `ListItem`, `MainData`, `WeatherItem`, `CloudsData`, `WindData`, `RainData`, `SysData`, `CityData`, `Coordinates`
+- File: `android/app/src/main/java/com/example/weathery/data/model/WeatherResponse.kt`
+
+### 2. Data layer — API
+Create a Retrofit interface mirroring `WeatheryManager.getCurrentWeather()`.
+- Endpoint: `GET /data/2.5/forecast/hourly`
+- Query params: `lat`, `lon`, `appid`, `units`
+- Use `suspend fun` (not callbacks)
+- File: `android/app/src/main/java/com/example/weathery/data/remote/WeatherApi.kt`
+
+Create a `WeatherRepository` that:
+- Wraps the Retrofit call
+- Handles geocoding: given a city name string, resolve lat/lon using `android.location.Geocoder`, then call the API
+- Returns `Result<ResponseData>` (Kotlin stdlib Result)
+- File: `android/app/src/main/java/com/example/weathery/data/repository/WeatherRepository.kt`
+
+### 3. Location layer
+Create a `LocationManager` class using `FusedLocationProviderClient` that:
+- Exposes the last known location as a `StateFlow<Location?>`
+- Requests location updates with `LocationRequest` (interval 10 min, fastest 5 min)
+- Does NOT handle permission UI — that belongs in the Composable layer
+- File: `android/app/src/main/java/com/example/weathery/location/LocationManager.kt`
+
+### 4. ViewModel
+Create `WeatherViewModel : ViewModel()` that mirrors `WeatherViewModel.swift`:
+- `uiState: StateFlow<WeatherUiState>` (sealed class: Loading, Success, Error)
+- `isCelsius: StateFlow<Boolean>` backed by DataStore
+- Functions: `loadWeather(cityName: String)`, `loadWeatherForLocation(lat: Double, lon: Double)`, `toggleUnit()`
+- All derived display strings (temperature, feelsLike, humidity, wind, pop, dailyForecasts, etc.) as computed properties on `WeatherUiState.Success` or as helper functions
+- File: `android/app/src/main/java/com/example/weathery/ui/WeatherViewModel.kt`
+
+### 5. UI — Composables
+Translate each SwiftUI view to a Jetpack Compose `@Composable fun`. Map:
+- `WeatherView.swift` → `WeatherScreen.kt` (root screen)
+- `TopWeatherView.swift` → `TopWeatherSection.kt`
+- `HourlyForecastView.swift` → `HourlyForecastRow.kt` (LazyRow)
+- `DailyForecastView.swift` → `DailyForecastList.kt` (LazyColumn or Column)
+- `IndicatorsView.swift` → `IndicatorsGrid.kt`
+- `SunriseView.swift` → `SunriseSunsetCard.kt`
+- `LoadingView.swift` → `LoadingScreen.kt`
+- `WelcomeView.swift` → `WelcomeScreen.kt`
+- `AddLocationView.swift` → `AddLocationDialog.kt`
+- `ManageLocationsView.swift` → `ManageLocationsSheet.kt`
+
+For icons, use Material Icons (`Icons.Default.*`) or map weather condition strings to icons the same way `weatherIcon(for:)` does in the ViewModel.
+
+Colors: reproduce the blue/dark-blue theme — define a `Color.kt` with `WeatheryBlue` and `WeatheryDarkBlue` matching the iOS asset catalog values.
+
+### 6. Permissions & Manifest
+Add to `AndroidManifest.xml`:
+- `INTERNET`
+- `ACCESS_FINE_LOCATION`
+- `ACCESS_COARSE_LOCATION`
+
+Add runtime permission request in the main Composable using `rememberPermissionState` (Accompanist) or the built-in `rememberLauncherForActivityResult`.
+
+### 7. Gradle / Dependencies
+Add to `android/app/build.gradle.kts`:
+- Retrofit2 + Gson converter
+- OkHttp logging interceptor
+- Kotlin Coroutines
+- `androidx.lifecycle:lifecycle-viewmodel-compose`
+- `androidx.datastore:datastore-preferences`
+- Google Play Services location (`com.google.android.gms:play-services-location`)
+- Accompanist permissions (if used)
+
+## Swift → Kotlin Quick Reference
+
+| Swift | Kotlin |
+|---|---|
+| `URLSession` callback | `suspend fun` + Retrofit |
+| `@Published var x` | `StateFlow<T>` in ViewModel |
+| `ObservableObject` | `ViewModel` |
+| `@AppStorage` | `DataStore<Preferences>` |
+| `CLGeocoder` | `android.location.Geocoder` |
+| `CLLocationManager` | `FusedLocationProviderClient` |
+| `DispatchQueue.main.async` | `withContext(Dispatchers.Main)` |
+| `struct` (value) | `data class` |
+| `enum` with values | `sealed class` |
+| `SwiftUI View` | `@Composable fun` |
+| `guard let x = y else { return }` | `val x = y ?: return` |
+| `JSONDecoder` + `Codable` | Gson + `@SerializedName` |
+
+## Constraints
+
+- No XML layouts. All UI must be Jetpack Compose.
+- No callback-style network calls. All network code must use `suspend fun`.
+- Keep Composables stateless where possible — pass state down, events up.
+- Do not hardcode the API key. Read it from `BuildConfig.WEATHER_API_KEY` (to be set in `local.properties`).
+- Minimum SDK 26 — do not use APIs below that level.
+- Follow standard Kotlin naming: `camelCase` for functions/properties, `PascalCase` for classes.
