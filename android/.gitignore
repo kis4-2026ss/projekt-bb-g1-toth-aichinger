@@ -8,6 +8,5 @@ build
 .externalNativeBuild
 .cxx
 local.properties
-gradle
 .kotlin
 .idea
