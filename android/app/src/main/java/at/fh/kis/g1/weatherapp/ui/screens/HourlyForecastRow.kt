@@ -46,7 +46,7 @@ fun HourlyForecastItem(
                 tint = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = viewModel.formatTemp(item.main.temp),
+                text = viewModel.formatTemp(item.main.temp, isCelsius),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.bodyMedium
             )

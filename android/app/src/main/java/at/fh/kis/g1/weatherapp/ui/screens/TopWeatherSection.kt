@@ -42,7 +42,7 @@ fun TopWeatherSection(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = viewModel.formatTemp(current.main.temp),
+                    text = viewModel.formatTemp(current.main.temp, isCelsius),
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Light
                 )
@@ -57,11 +57,11 @@ fun TopWeatherSection(
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        "H: ${viewModel.formatTemp(current.main.tempMax)}",
+                        "H: ${viewModel.formatTemp(current.main.tempMax, isCelsius)}",
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        "L: ${viewModel.formatTemp(current.main.tempMin)}",
+                        "L: ${viewModel.formatTemp(current.main.tempMin, isCelsius)}",
                         style = MaterialTheme.typography.bodySmall
                     )
                 }

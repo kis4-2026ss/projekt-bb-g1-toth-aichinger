@@ -85,11 +85,11 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         _searchQuery.value = query
     }
 
-    fun convertTemp(celsius: Double): Double =
-        if (_isCelsius.value) celsius else celsius * 9.0 / 5.0 + 32.0
+    fun convertTemp(celsius: Double, isCelsius: Boolean): Double =
+        if (isCelsius) celsius else celsius * 9.0 / 5.0 + 32.0
 
-    fun formatTemp(celsius: Double): String =
-        "${convertTemp(celsius).roundToInt()}°"
+    fun formatTemp(celsius: Double, isCelsius: Boolean): String =
+        "${convertTemp(celsius, isCelsius).roundToInt()}${if (isCelsius) "°C" else "°F"}"
 
     fun formatHourlyTime(unixSeconds: Long, timezoneOffsetSeconds: Long): String =
         DateTimeFormatter.ofPattern("HH:mm")

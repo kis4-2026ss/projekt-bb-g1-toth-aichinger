@@ -53,10 +53,10 @@ fun DailyForecastRow(
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(viewModel.formatTemp(forecast.maxTemp), style = MaterialTheme.typography.bodyMedium)
+            Text(viewModel.formatTemp(forecast.maxTemp, isCelsius), style = MaterialTheme.typography.bodyMedium)
             Spacer(Modifier.width(8.dp))
             Text(
-                text = viewModel.formatTemp(forecast.minTemp),
+                text = viewModel.formatTemp(forecast.minTemp, isCelsius),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )

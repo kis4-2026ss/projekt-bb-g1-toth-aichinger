@@ -37,7 +37,7 @@ fun IndicatorsGrid(
             modifier = Modifier.weight(1f),
             icon = Icons.Default.DeviceThermostat,
             label = "Feels Like",
-            value = viewModel.formatTemp(current.main.feelsLike)
+            value = viewModel.formatTemp(current.main.feelsLike, isCelsius)
         )
         IndicatorCard(
             modifier = Modifier.weight(1f),
